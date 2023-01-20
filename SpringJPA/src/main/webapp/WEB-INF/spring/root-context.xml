@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- Root Context: defines shared resources visible to all other web components -->
+
+	<!-- ** JPA Hibernate ** -->
+	<!-- 
+		1. JDBC : 데이터베이스 연결 
+		2. Spring 과 JPA 연동 
+			2.1) jpaVendorAdapter 
+			=> DB 연동에 사용할 JPA 벤더를 지정 
+			=> Hibernate를 JPA 구현체로 사용하고 있으므로 HibernateJpaVendorAdapter를 등록 
+			2.2) entityManagerFactory 
+			=> JPA를 이용하여 DAO기능을 구현하려면 EntityManager 의 구현객체가 필요하고 
+			=> EntityManager 객체를 생성 하려면 ...ManagerFactoryBean 클래스를 Bean 등록해야하며
+			=> 이때 앞서 설정한 dataSource 와 jpaVendorAdapter 를 의존성 주입함 
+	-->
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName"
+			value="com.mysql.cj.jdbc.Driver" />
+		<property name="url"
+			value="jdbc:mysql://localhost:3306/mydb?useSSL=false&amp;serverTimezone=UTC&amp;allowPublicKeyRetrieval=true" />
+		<property name="username" value="root" />
+		<property name="password" value="mysql" />
+	</bean>
+	<bean id="jpaVendorAdapter"
+		class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="jpaVendorAdapter" ref="jpaVendorAdapter" />
+	</bean>
+
+</beans>
